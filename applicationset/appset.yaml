@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: template
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/akhan23wgu/argocd-helloworld.git
+      revision: gh-pages
+  template:
+    metadata:
+      name: 'Hello-World' 
+    spec:
+      destination:
+        name: ''
+        namespace: 'demo'
+        server: 'https://kubernetes.default.svc'
+      source:
+        path: 'apache'
+        repoURL: 'https://charts.bitnami.com/bitnami/apache'
+        chart: apache
+        helm:
+          values: |-
+            service:
+              type: "NodePort"
+            cloneHtdocsFromGit:
+              enable: "true"
+              repository: "https://github.com/mdn/beginner-html-site-styled.git"
+              #repository: "https://github.com/akhan23wgu/argocd-helloworld.git"
+              branch: "gh-pages""
+      project: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true

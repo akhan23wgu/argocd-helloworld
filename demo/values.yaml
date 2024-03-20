@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: apache
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    name: ''
+    namespace: argocd
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: 'apache'
+    repoURL: 'registry-1.docker.io/bitnamicharts'
+    targetRevision: 11.0.0
+    chart: apache
+    helm:
+      values: |-
+        service:
+          type: "NodePort"
+        cloneHtdocsFromGit:
+          enable: "true"
+          repository: "https://github.com/mdn/beginner-html-site-styled.git"
+          #repository: "https://github.com/akhan23wgu/argocd-helloworld.git"
+          branch: "gh-pages"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
