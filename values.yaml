@@ -1,48 +1,47 @@
-apiVersion: v1
-items:
-- apiVersion: argoproj.io/v1alpha1
-  kind: Application
-  metadata:
-    name: apache
-    namespace: argocd
-  spec:
-    project: default
-    destination:
-      name: ''
-      namespace: argocd
-      server: 'https://kubernetes.default.svc'
-    source:
-      path: charts/apache
-      repoURL: 'https://charts.bitnami.com/bitnami/apache'
-      helm:
-        parameters: 
-         - name: readinessProbe.enabled
-           value: "false"
-         - name: livenessProbe.enabled
-           value: "false"
-        #  - name: virtualservice.gateway
-        #    value: localhost
-        #  - name: service.type
-        #    value: "NodePort"
-         - name: metrics.enabled
-           value: "true"
-         - name: metrics.serviceMonitor.enabled
-           value: "true"
-         - name: metrics.containerPort
-           value: "9117"
-         - name: metrics.serviceMonitor.namespace
-           value: "argocd"
-         - name: metrics.serviceMonitor.path
-           value: "/metrics"
-         - name: cloneHtdocsFromGit.enabled
-           values: "true"
-         - name: cloneHtdocsFromGit.repository
-           values: "https://github.com/mdn/beginner-html-site-styled.git"
-           #values: "https://github.com/akhan23wgu/argocd-helloworld.git"
-         - name: cloneHtdocsFromGit.branch
-           values: "main"
-    sources: []
-kind: List
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  resourceVersion: ""
-  selfLink: ""
+  name: apache
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    name: ''
+    namespace: argocd
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: charts/apache
+    repoURL: 'https://charts.bitnami.com/bitnami/apache'
+    helm:
+      parameters: 
+        - name: readinessProbe.enabled
+          value: "false"
+        - name: livenessProbe.enabled
+          value: "false"
+      #  - name: virtualservice.gateway
+      #    value: localhost
+      #  - name: service.type
+      #    value: "NodePort"
+        - name: metrics.enabled
+          value: "true"
+        - name: metrics.serviceMonitor.enabled
+          value: "true"
+        - name: metrics.containerPort
+          value: "9117"
+        - name: metrics.serviceMonitor.namespace
+          value: "argocd"
+        - name: metrics.serviceMonitor.path
+          value: "/metrics"
+        - name: cloneHtdocsFromGit.enabled
+          values: "true"
+        - name: cloneHtdocsFromGit.repository
+          values: "https://github.com/mdn/beginner-html-site-styled.git"
+          #values: "https://github.com/akhan23wgu/argocd-helloworld.git"
+        - name: cloneHtdocsFromGit.branch
+          values: "main"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
