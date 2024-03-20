@@ -8,8 +8,6 @@ spec:
   - git:
       repoURL: https://github.com/akhan23wgu/argocd-helloworld.git
       revision: gh-pages
-      files:
-      - path: "demo/values.yaml"
   template:
     metadata:
       name: 'Hello-World' 
@@ -19,19 +17,18 @@ spec:
         namespace: 'demo'
         server: 'https://kubernetes.default.svc'
       source:
-        path: 'charts/apache'
+        path: 'apache'
         repoURL: 'https://charts.bitnami.com/bitnami/apache'
+        chart: apache
         helm:
-          parameters: 
-            - name: service.type
-              value: "NodePort"
-            - name: cloneHtdocsFromGit.enabled
-              values: "true"
-            - name: cloneHtdocsFromGit.repository
-              values: "https://github.com/mdn/beginner-html-site-styled.git"
-              #values: "https://github.com/akhan23wgu/argocd-helloworld.git"
-            - name: cloneHtdocsFromGit.branch
-              values: "gh-pages"
+          values: |-
+            service:
+              type: "NodePort"
+            cloneHtdocsFromGit:
+              enable: "true"
+              repository: "https://github.com/mdn/beginner-html-site-styled.git"
+              #repository: "https://github.com/akhan23wgu/argocd-helloworld.git"
+              branch: "gh-pages""
       project: default
       syncPolicy:
         automated:

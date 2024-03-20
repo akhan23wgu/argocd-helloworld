@@ -14,32 +14,14 @@ spec:
     repoURL: 'registry-1.docker.io/bitnamicharts'
     chart: apache
     helm:
-      parameters: 
-        - name: readinessProbe.enabled
-          value: "false"
-        - name: livenessProbe.enabled
-          value: "false"
-      #  - name: virtualservice.gateway
-      #    value: localhost
-      #  - name: service.type
-      #    value: "NodePort"
-        - name: metrics.enabled
-          value: "true"
-        - name: metrics.serviceMonitor.enabled
-          value: "true"
-        - name: metrics.containerPort
-          value: "9117"
-        - name: metrics.serviceMonitor.namespace
-          value: "argocd"
-        - name: metrics.serviceMonitor.path
-          value: "/metrics"
-        - name: cloneHtdocsFromGit.enabled
-          values: "true"
-        - name: cloneHtdocsFromGit.repository
-          values: "https://github.com/mdn/beginner-html-site-styled.git"
-          #values: "https://github.com/akhan23wgu/argocd-helloworld.git"
-        - name: cloneHtdocsFromGit.branch
-          values: "main"
+      values: |-
+        service:
+          type: "NodePort"
+        cloneHtdocsFromGit:
+          enable: "true"
+          repository: "https://github.com/mdn/beginner-html-site-styled.git"
+          #repository: "https://github.com/akhan23wgu/argocd-helloworld.git"
+          branch: "gh-pages"
   syncPolicy:
     automated:
       prune: true
