@@ -12,6 +12,7 @@ spec:
   source:
     path: 'apache'
     repoURL: 'registry-1.docker.io/bitnamicharts'
+    targetRevision: 11.0.0
     chart: apache
     helm:
       values: |-
