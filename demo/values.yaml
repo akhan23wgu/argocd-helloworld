@@ -23,6 +23,10 @@ spec:
           repository: "https://github.com/mdn/beginner-html-site-styled.git"
           #repository: "https://github.com/akhan23wgu/argocd-helloworld.git"
           branch: "gh-pages"
+        extraVolumeMounts:
+          - name: empty-dir
+            mountPath: /opt/bitnami/apache/htdocs
+            subPath: app-volume-dir
   syncPolicy:
     automated:
       prune: true
