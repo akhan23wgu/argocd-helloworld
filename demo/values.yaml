@@ -10,8 +10,9 @@ spec:
     namespace: argocd
     server: 'https://kubernetes.default.svc'
   source:
-    path: charts/apache
-    repoURL: 'https://charts.bitnami.com/bitnami/apache'
+    path: 'apache'
+    repoURL: 'registry-1.docker.io/bitnamicharts'
+    chart: apache
     helm:
       parameters: 
         - name: readinessProbe.enabled
