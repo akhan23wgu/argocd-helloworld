@@ -7,7 +7,7 @@ spec:
   project: default
   destination:
     name: ''
-    namespace: argocd
+    namespace: demo
     server: 'https://kubernetes.default.svc'
   source:
     path: 'apache'
@@ -16,14 +16,13 @@ spec:
     chart: apache
     helm:
       values: |-
-        service:
-          type: "NodePort"
-        cloneHtdocsFromGit:
-          enable: "true"
-          repository: "https://github.com/mdn/beginner-html-site-styled.git"
-          #repository: "https://github.com/akhan23wgu/argocd-helloworld.git"
-          branch: "gh-pages"
-  syncPolicy:
+        parameters:
+         - name: service.type
+           value: "NodePort"
+         - name: htdocsConfigMap
+           value: "index-html-configmap"
+         - name: service.NodePorts.http
+           value: "30129"
     automated:
       prune: true
       selfHeal: true
