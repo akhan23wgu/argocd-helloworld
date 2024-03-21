@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: apache
+  name: nginx
   namespace: argocd
 spec:
   project: default
@@ -10,23 +10,50 @@ spec:
     namespace: argocd
     server: 'https://kubernetes.default.svc'
   source:
-    path: 'apache'
+    path: 'nginx'
     repoURL: 'registry-1.docker.io/bitnamicharts'
-    targetRevision: 11.0.0
+    targetRevision: "15.14.0"
     chart: apache
     helm:
       values: |-
         service:
           type: "NodePort"
-        cloneHtdocsFromGit:
-          enable: "true"
-          repository: "https://github.com/mdn/beginner-html-site-styled.git"
-          #repository: "https://github.com/akhan23wgu/argocd-helloworld.git"
-          branch: "gh-pages"
+        staticSiteConfigmap: "index-html-configmap"
+        serverBlock: |-
+          server {
+            listen 8080;
+            root /app/;
+            index index.html index.htm;
+            location /n98/ {
+              alias /n98/;
+              index __i;
+              autoindex on;
+              autoindex_format json;
+              disable_symlinks off;
+            }
+            location / {
+              root /app/;
+            }
+          }
+        extraDeploy:
+          - |
+            apiVersion: v1
+            kind: PersistentVolumeClaim
+            metadata:
+              name: n98
+            spec:
+              accessModes:
+              - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 4Gi
+        extraVolumes:
+          - name: n98
+            persistentVolumeClaim:
+              claimName: n98
         extraVolumeMounts:
-          - name: empty-dir
-            mountPath: /opt/bitnami/apache/htdocs
-            subPath: app-volume-dir
+          - mountPath: /n98
+            name: n98
   syncPolicy:
     automated:
       prune: true
