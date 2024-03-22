@@ -24,8 +24,8 @@ spec:
             listen 8080;
             root /app/;
             index index.html index.htm;
-            location /n98/ {
-              alias /n98/;
+            location /demoVol/ {
+              alias /demoVol/;
               index __i;
               autoindex on;
               autoindex_format json;
@@ -40,7 +40,7 @@ spec:
             apiVersion: v1
             kind: PersistentVolumeClaim
             metadata:
-              name: n98
+              name: demoVol
             spec:
               accessModes:
               - ReadWriteOnce
@@ -48,12 +48,12 @@ spec:
                 requests:
                   storage: 4Gi
         extraVolumes:
-          - name: n98
+          - name: demoVol
             persistentVolumeClaim:
-              claimName: n98
+              claimName: demoVol
         extraVolumeMounts:
-          - mountPath: /n98
-            name: n98
+          - mountPath: /demoVol
+            name: demoVol
   syncPolicy:
     automated:
       prune: true
