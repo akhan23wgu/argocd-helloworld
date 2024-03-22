@@ -19,13 +19,14 @@ spec:
         service:
           type: "NodePort"
         staticSiteConfigmap: "index-html-configmap"
+        cloneStaticSiteFromGit.repository: 
         serverBlock: |-
           server {
             listen 8080;
             root /app/;
             index index.html index.htm;
-            location /demoVol/ {
-              alias /demoVol/;
+            location /demovol/ {
+              alias /demovol/;
               index __i;
               autoindex on;
               autoindex_format json;
@@ -40,7 +41,7 @@ spec:
             apiVersion: v1
             kind: PersistentVolumeClaim
             metadata:
-              name: demoVol
+              name: demovol
             spec:
               accessModes:
               - ReadWriteOnce
@@ -48,12 +49,12 @@ spec:
                 requests:
                   storage: 4Gi
         extraVolumes:
-          - name: demoVol
+          - name: demovol
             persistentVolumeClaim:
-              claimName: demoVol
+              claimName: demovol
         extraVolumeMounts:
-          - mountPath: /demoVol
-            name: demoVol
+          - mountPath: /demovol
+            name: demovol
   syncPolicy:
     automated:
       prune: true
