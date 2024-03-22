@@ -39,6 +39,19 @@ spec:
         extraDeploy:
           - |
             apiVersion: v1
+            kind: ConfigMap
+            metadata:
+                name: index-html-configmap
+                namespace: demo
+            data:
+                index.html: |
+                    <html>
+                    <h1>Welcome</h1>
+                    </br>
+                    <h1> another project completed </h1>
+                    </html>
+          - |
+            apiVersion: v1
             kind: PersistentVolumeClaim
             metadata:
               name: demovol
