@@ -13,7 +13,7 @@ spec:
     path: 'nginx'
     repoURL: 'registry-1.docker.io/bitnamicharts'
     targetRevision: "15.14.0"
-    chart: apache
+    chart: nginx
     helm:
       values: |-
         service:
