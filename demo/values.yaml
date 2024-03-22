@@ -22,7 +22,7 @@ spec:
         cloneStaticSiteFromGit.repository: 
         serverBlock: |-
           server {
-            listen 8080;
+            listen 8081;
             root /app/;
             index index.html index.htm;
             location /demovol/ {
