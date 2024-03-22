@@ -2,12 +2,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: nginx
-  namespace: demo
+  namespace: argocd
 spec:
   project: default
   destination:
     name: ''
-    namespace: argocd
+    namespace: demo
     server: 'https://kubernetes.default.svc'
   source:
     path: 'nginx'
