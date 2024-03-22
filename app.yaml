@@ -1,26 +1,76 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: demoApp
+  name: nginx
   namespace: argocd
 spec:
-  destination:
-    namespace: demo
-    server: https://kubernetes.default.svc
   project: default
+  destination:
+    name: ''
+    namespace: demo
+    server: 'https://kubernetes.default.svc'
   source:
-    path: demo/
-    repoURL: https://github.com/akhan23wgu/argocd-helloworld
-    targetRevision: main
+    path: 'nginx'
+    repoURL: 'registry-1.docker.io/bitnamicharts'
+    targetRevision: "15.14.0"
+    chart: nginx
+    helm:
+      values: |-
+        service:
+          type: "NodePort"
+        staticSiteConfigmap: "index-html-configmap"
+        cloneStaticSiteFromGit.repository: 
+        serverBlock: |-
+          server {
+            listen 8081;
+            root /app/;
+            index index.html index.htm;
+            location /demovol/ {
+              alias /demovol/;
+              index __i;
+              autoindex on;
+              autoindex_format json;
+              disable_symlinks off;
+            }
+            location / {
+              root /app/;
+            }
+          }
+        extraDeploy:
+          - |
+            apiVersion: v1
+            kind: ConfigMap
+            metadata:
+                name: index-html-configmap
+                namespace: demo
+            data:
+                index.html: |
+                    <html>
+                    <h1>Welcome</h1>
+                    </br>
+                    <h1> another project completed </h1>
+                    </html>
+          - |
+            apiVersion: v1
+            kind: PersistentVolumeClaim
+            metadata:
+              name: demovol
+            spec:
+              accessModes:
+              - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 4Gi
+        extraVolumes:
+          - name: demovol
+            persistentVolumeClaim:
+              claimName: demovol
+        extraVolumeMounts:
+          - mountPath: /demovol
+            name: demovol
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        maxDuration: 3m0s
-        factor: 2
+    - CreateNamespace=true
